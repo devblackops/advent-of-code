@@ -9,26 +9,20 @@ function Find-Candidates {
     $zeros = $Candidates.Where({[string][char[]]$_[$Bit] -eq '0'})
 
     if ($Type -eq 'o2') {
-        $ones.Count -ge $zeros.Count ? $ones : $zeros
+        $Candidates = $ones.Count -ge $zeros.Count ? $ones : $zeros
     } elseIf ($Type -eq 'co2') {
-        $zeros.Count -le $ones.Count ? $zeros : $ones
+        $Candidates = $zeros.Count -le $ones.Count ? $zeros : $ones
+    }
+    if ($Candidates.Count -gt 1 -and $Bit -ne $Candidates[0].Length) {
+        Find-Candidates $Candidates ($Bit+1) $Type
+    } else {
+        $Candidates
     }
 }
 
-$o2Candidates = $co2Candidates = Get-Content ./input.txt
-
-$x = 0
-while ($o2Candidates.Count -gt 1 -and $x -le 11) {
-    $o2Candidates = (Find-Candidates $o2Candidates $x 'o2')
-    $x++
-}
-
-$x = 0
-while ($co2Candidates.Count -gt 1 -and $x -le 11) {
-    $co2Candidates = (Find-Candidates $co2Candidates $x 'co2')
-    $x++
-}
-
-$o2  = [Convert]::ToInt32($o2Candidates,2)
-$co2 = [Convert]::ToInt32($co2Candidates,2)
+$data = Get-Content ./input.txt
+$o2Candidates  = Find-Candidates $data 0 'o2'
+$co2Candidates = Find-Candidates $data 0 'co2'
+$o2  = [Convert]::ToInt32($o2Candidates, 2)
+$co2 = [Convert]::ToInt32($co2Candidates ,2)
 $o2 * $co2
