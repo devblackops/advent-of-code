@@ -1,5 +1,3 @@
-$data = Get-Content ./input.txt
-
 function Get-MostCommon {
     param(
         [string[]]$Data,
@@ -25,18 +23,12 @@ function Get-MostCommon {
     }
 }
 
-$gammaBits = ''
+$data = Get-Content ./input.txt
+$gammaBits = $epsilonBits = ''
 for ($x = 0; $x -lt $data[0].Length; $x++) {
-    $val = Get-MostCommon $data $x 'gamma'
-    $gammaBits += $val
+    $gammaBits   += Get-MostCommon $data $x 'gamma'
+    $epsilonBits += Get-MostCommon $data $x 'epsilon'
 }
 $gamma = [Convert]::ToInt32([string]$gammaBits,2)
-
-$epsilonBits = ''
-for ($x = 0; $x -lt $data[0].Length; $x++) {
-    $val = Get-MostCommon $data $x 'epsilon'
-    $epsilonBits += $val
-}
 $epsilon = [Convert]::ToInt32([string]$epsilonBits,2)
-
 $gamma * $epsilon
