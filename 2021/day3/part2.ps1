@@ -5,21 +5,13 @@ function Find-Candidates {
         [string]$Type
     )
 
-    $ones  = $Candidates.Where({[int][string][char[]]$_[$Bit] -eq 1})
-    $zeros = $Candidates.Where({[int][string][char[]]$_[$Bit] -eq 0})
+    $ones  = $Candidates.Where({[string][char[]]$_[$Bit] -eq '1'})
+    $zeros = $Candidates.Where({[string][char[]]$_[$Bit] -eq '0'})
 
     if ($Type -eq 'o2') {
-        if ($ones.Count -ge $zeros.Count) {
-            $ones
-        } else {
-            $zeros
-        }
+        $ones.Count -ge $zeros.Count ? $ones : $zeros
     } elseIf ($Type -eq 'co2') {
-        if ($zeros.Count -le $ones.Count) {
-            $zeros
-        } else {
-            $ones
-        }
+        $zeros.Count -le $ones.Count ? $zeros : $ones
     }
 }
 
@@ -37,6 +29,6 @@ while ($co2Candidates.Count -gt 1 -and $x -le 11) {
     $x++
 }
 
-$o2 = [Convert]::ToInt32($o2Candidates,2)
+$o2  = [Convert]::ToInt32($o2Candidates,2)
 $co2 = [Convert]::ToInt32($co2Candidates,2)
 $o2 * $co2
